@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
     <title>Welcome page</title>
 </head>
 <body>
     <p>Hello Tejas, welcome to chat application by socket.io library</p>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- This will load the socket library which is avaliable at client side -->
+    <script>
+    var socketClient = io();//we are making the request from client to server -> to open-up a websocket connection, and always keep it open
+
+//This is to listen to an event , which would be sent from server to client
+//this is connect event , which connects to the server
+    socketClient.on('connect',()=> {
+        console.log('connected to server');
+    });
+
+//this diconnect event will be fired, when the connection will be dropped/closed
+    socketClient.on('disconnect',()=>{
+        console.log('disconnected from server');
+    })
+    </script>
 </body>
 </html>
