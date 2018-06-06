@@ -4,7 +4,7 @@ const socketIO = require('socket.io')
 const http = require('http');//built in node module
 
 
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 
 // console.log(__dirname+'/../public');
 
@@ -44,8 +44,8 @@ socketServer.on('connection', (socketClient) => {
 app.get('/',(request,response)=> {
     response.render('index.html', {})
 })//end of get() method
-
  */
+
 
 server.listen(port, () => {
     console.log(`server started @${port} port`);
