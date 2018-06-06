@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const socketIO = require('socket.io')
 const http = require('http');//built in node module
+const _ = require('lodash')
 
 
 const port = process.env.PORT || 3000;
@@ -34,11 +35,38 @@ socketServer.on('connection', (socketClient) => {
     //this -> socketClient , is similiar to socket present inside the client side
     console.log('New user is connected!!, Connected to client');
 
+    //emit -> we use emit() inorder to emit/send the event @client and @server side
+    //emit() -> this is not a listener , its an emit
+    //since it is not listener , soo need to specifiy the callback as second argument
+    //in second arugum we specifiy the data which we want to send, bydefault it can be empty if we dont want to
+    //send the data
+    socketClient.emit('newEmail', {
+        from : "tsabunkar@gmail.com",
+        text :'Hey what is going on',
+        createdAt : 123
+    })
+    
+    //This is the listener which listens to the createEmail -> custome event create
+    socketClient.on('createEmail', (dataSendFromClient) =>{
+        console.log('new email', dataSendFromClient);
+    });
 
+    //chat application
+     var date = new Date();
+    socketClient.emit('newMessage', {
+        from : "Tejas",
+        text :'Welcome 2 expressMedia',
+        createdAt : (date.getDate())+'/'+(date.getMonth()+1)+'/'+(date.getFullYear())
+    })
+
+    //on() -> this method is listener
     socketClient.on('disconnect', () => {
         console.log('client has beed disconnected !');
     })
 })
+
+
+
 
 /* 
 app.get('/',(request,response)=> {
