@@ -8,6 +8,15 @@ var generateMessage = (from, text) => {
     }
 }
 
+var generateLocationMessage = (from , latitude, longitiude ) => {
+    return{
+        from ,
+        geoLocUrl : `https://www.google.com/maps?q=${latitude},${longitiude}`,
+        createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+    }
+}
+
 module.exports = {
-    generateMessage
+    generateMessage,
+    generateLocationMessage
 }

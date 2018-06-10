@@ -19,10 +19,20 @@ socketClient.on('newMessage', (dataSendFromServer) => {
     $("#messageOrderListId").append(liElement);
 })
 
+socketClient.on('newLocationMessage', (messageVal) => {
+    var liElem = $('<li></li>');
+    var anchorEle = $('<a target="_blank">My current location</a>');
+    liElem.text(`${messageVal.from} : `);
+    anchorEle.attr('href', messageVal.geoLocUrl)
+    liElem.append(anchorEle);
+    $("#messageOrderListId").append(liElem);
+})
+
+//-------------------JQuery code----------------------
 
 //jquery, here we r overridding the default behaviour of page load when <form> is
 //submitted, by using preventDefault() method
-$('#formId').on('submit', (e) => {//onsubmit of form this function will be invoked
+$('#formId').on('submit', (e) => { //onsubmit of form this function will be invoked
     e.preventDefault();
 
     socketClient.emit('createMessage', {
@@ -33,3 +43,23 @@ $('#formId').on('submit', (e) => {//onsubmit of form this function will be invok
 
     })
 })
+
+var locationBtn = $('#sendLocationId');
+locationBtn.on('click', () => {
+    if (!navigator.geolocation) {
+        //if geolocation is not supported by the browser
+        return alert('Geolocation is not supported by ur browser!!');
+    }
+
+    navigator.geolocation.getCurrentPosition((positionVal) => {
+        //1st argu -> when successfully able to fetch the current location
+        // console.log(positionVal);
+        socketClient.emit('createLocationMessage', {
+            latitude: positionVal.coords.latitude,
+            longitude: positionVal.coords.longitude
+        })
+    }, () => {
+        //2nd argum -> failure/error scenarion
+        alert('unable to fetch the location, please give the permission')
+    })
+});

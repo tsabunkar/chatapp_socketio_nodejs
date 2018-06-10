@@ -5,7 +5,8 @@ const http = require('http'); //built in node module
 const _ = require('lodash')
 //instead we could have use Object destructring technique here i.e-
 const {
-    generateMessage
+    generateMessage,
+    generateLocationMessage
 } = require('./utils/message')
 
 const port = process.env.PORT || 3000;
@@ -59,6 +60,13 @@ socketServer.on('connection', (socketClient) => {
         //which is written in the client code
     });
 
+
+
+    socketClient.on('createLocationMessage', (coordinatesVal) => {
+        // socketServer.emit('newMessage', generateMessage('Admin', `lat :${coordinatesVal.latitude} & long:${coordinatesVal.longitude}`) )
+        socketServer.emit('newLocationMessage',
+            generateLocationMessage('Admin', coordinatesVal.latitude, coordinatesVal.longitude));
+    })
 
     //on() -> this method is listener
     socketClient.on('disconnect', () => {
