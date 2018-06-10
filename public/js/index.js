@@ -6,10 +6,10 @@ socketClient.on('connect', () => { //arrow function is not supported in IE
     console.log('connected to server');
 
     //creating a custom event and emitting it from client to server
-    socketClient.emit('createEmail', {
+  /*   socketClient.emit('createEmail', {
         to:'usha@gmail.com',
         text : 'Hey this is usha sabunkar'
-    });
+    }); */
 
     socketClient.emit('createMessage',{
         from:'Shailesh',
@@ -24,9 +24,9 @@ socketClient.on('disconnect', () => {
 })
 
 //this is the listener, for newEmail (which is our custome event)
-socketClient.on('newEmail', (dataSendFromServer) => {
+/* socketClient.on('newEmail', (dataSendFromServer) => {
     console.log('new email',dataSendFromServer);
-})
+}) */
 
 //chat application
 socketClient.on('newMessage', (dataSendFromServer) => {
