@@ -3,19 +3,31 @@
 
 <head>
     <title>Welcome page</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <p>Welcome to my chat app</p>
+<body class="chat">
 
-    <ol id="messageOrderListId"> </ol>
+    <div class="chat__sidebar">
+        <h3>MyChatApp</h3>
+        <div id="userDivId"></div>
+    </div>
 
-    <!-- when this form is submitted, we want to listen and call the socketClient.emit() -->
-    <form id="formId">
-        <input type="text" id="messageId" placeholder="Message" />
-        <button>Send</button>
-    </form>
-    <button id="sendLocationId">Send Location</button>
+    <div class="chat__main">
+        <ol id="messageOrderListId" class="chat_messages"> </ol>
+
+        <div class="chat__footer" id="Myfooter">
+            <!-- when this form is submitted, we want to listen and call the socketClient.emit() -->
+            <form id="formId">
+                <!--  autofocus will bring the cursor to this input ele -->
+                <!--    autocomplete -> we dont want suggestion from the browser soo -> off -->
+                <input type="text" id="messageId" placeholder="Message" autofocus autocomplete="off" />
+                <button>Send</button>
+            </form>
+            <button id="sendLocationId"> Send Location </button>
+        </div>
+
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/lib/jquery-3.3.1.min.js"></script>

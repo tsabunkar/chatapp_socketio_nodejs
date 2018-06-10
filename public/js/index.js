@@ -38,9 +38,10 @@ $('#formId').on('submit', (e) => { //onsubmit of form this function will be invo
     socketClient.emit('createMessage', {
         from: 'User',
         text: $('#messageId').val()
-    }, () => {
-        //3rd argum of emit(), which is for acknowledgement
+    }, () => { //3rd argum of emit(), which is for acknowledgement
 
+        $('#messageId').val('') //clearing the text value to empty when message is send
+       
     })
 })
 
@@ -51,7 +52,12 @@ locationBtn.on('click', () => {
         return alert('Geolocation is not supported by ur browser!!');
     }
 
+    locationBtn.attr('disabled', 'disabled').text('Sending Location..')
+
     navigator.geolocation.getCurrentPosition((positionVal) => {
+
+        locationBtn.removeAttr('disabled').text('Send Location')
+
         //1st argu -> when successfully able to fetch the current location
         // console.log(positionVal);
         socketClient.emit('createLocationMessage', {
@@ -61,5 +67,6 @@ locationBtn.on('click', () => {
     }, () => {
         //2nd argum -> failure/error scenarion
         alert('unable to fetch the location, please give the permission')
+        locationBtn.removeAttr('disabled').text('Send Location')
     })
 });

@@ -56,7 +56,8 @@ socketServer.on('connection', (socketClient) => {
             generateMessage(dataSendFromClient.from, dataSendFromClient.text)
         );
 
-        callback('this message is from server'); //this callback fun will call 3rd argument of socketClient.emit('createMessage', {}, ()=> );
+        // callback('this message is from server'); //this callback fun will call 3rd argument of socketClient.emit('createMessage', {}, ()=> );
+        callback();
         //which is written in the client code
     });
 
