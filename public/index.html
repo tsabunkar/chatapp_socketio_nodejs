@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Welcome page</title>
 </head>
+
 <body>
-    <p>Hello Tejas, welcome to chat application by socket.io library</p>
+    <p>Welcome to my chat app</p>
+
+    <ol id="messageOrderListId"> </ol>
+
+    <!-- when this form is submitted, we want to listen and call the socketClient.emit() -->
+    <form id="formId">
+        <input type="text" id="messageId" placeholder="Message" />
+        <button>Send</button>
+    </form>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/lib/jquery-3.3.1.min.js"></script>
     <!-- This will load the socket library which is avaliable at client side -->
-    <script src="./js/index.js"> </script>
+    <script src="./js/index.js">
+    </script>
+
+
 </body>
+
 </html>
