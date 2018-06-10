@@ -3,7 +3,11 @@ const express = require('express');
 const socketIO = require('socket.io')
 const http = require('http'); //built in node module
 const _ = require('lodash')
-
+// const message = require('./utils/message')
+//instead we could have use Object destructring technique here i.e-
+const {
+    generateMessage
+} = require('./utils/message')
 
 const port = process.env.PORT || 3000;
 
@@ -61,20 +65,32 @@ socketServer.on('connection', (socketClient) => {
         createdAt : (date.getDate())+'/'+(date.getMonth()+1)+'/'+(date.getFullYear())
     }) */
 
+
+
+
     var date = new Date();
     //It is to great/welcome all the clients ,who r joining our application 
-    socketClient.emit('newMessage', {
-        from: 'Admin',
-        text: 'welcome to chat app',
-        createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
-    });
+    /*  socketClient.emit('newMessage', {
+         from: 'Admin',
+         text: 'welcome to chat app',
+         createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+     
+     }); */
+
+    socketClient.emit('newMessage',
+        /*   message.generateMessage('Admin', 'welcome to chat app') */
+        generateMessage('Admin', 'welcome to chat app')
+    );
 
     //It is to say other clients who has already join the chat appln that, a new user has joined
-    socketClient.broadcast.emit('newMessage', {
-        from: 'Admin',
-        text: 'New user joined !!',
-        createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
-    })
+    socketClient.broadcast.emit('newMessage',
+        generateMessage('Admin', 'New-user joined chat app')
+        /* {
+            from: 'Admin',
+            text: 'New user joined !!',
+            createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+        } */
+    )
 
     // var date = new Date();
     socketClient.on('createMessage', (dataSendFromClient) => {
@@ -83,11 +99,14 @@ socketServer.on('connection', (socketClient) => {
         //If the particular client broadcast an event, then this event is recieved to all the other
         //clients, including the client who has send it
 
-        socketServer.emit('newMessage', {
-            from: dataSendFromClient.from,
-            text: dataSendFromClient.text,
-            createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
-        });
+        socketServer.emit('newMessage',
+            generateMessage(dataSendFromClient.from, dataSendFromClient.text)
+            /*  {
+                from: dataSendFromClient.from,
+                text: dataSendFromClient.text,
+                createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+            } */
+        );
 
 
         //If the particular client broadcast an event, then this event shld be recieved to all the other
