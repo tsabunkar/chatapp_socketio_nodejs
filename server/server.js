@@ -40,6 +40,7 @@ socketServer.on('connection', (socketClient) => {
     //since it is not listener , soo need to specifiy the callback as second argument
     //in second arugum we specifiy the data which we want to send, bydefault it can be empty if we dont want to
     //send the data
+    
     /* socketClient.emit('newEmail', {
         from : "tsabunkar@gmail.com",
         text :'Hey what is going on',
@@ -51,17 +52,24 @@ socketServer.on('connection', (socketClient) => {
         console.log('new email', dataSendFromClient);
     }); */
 
-    socketClient.on('createMessage', (dataSendFromClient) =>{
-        console.log('new email', dataSendFromClient);
-    });
     
     //chat application
-     var date = new Date();
+    /*  var date = new Date();
     socketClient.emit('newMessage', {
         from : "Tejas",
         text :'Welcome 2 expressMedia',
         createdAt : (date.getDate())+'/'+(date.getMonth()+1)+'/'+(date.getFullYear())
-    })
+    }) */
+
+    socketClient.on('createMessage', (dataSendFromClient) =>{
+        console.log('new email', dataSendFromClient);
+        socketServer.emit('newMessage',{
+            from : dataSendFromClient.from,
+            text : dataSendFromClient.text,
+            createdAt : dataSendFromClient.createdAt
+        })
+    });
+    
 
     //on() -> this method is listener
     socketClient.on('disconnect', () => {

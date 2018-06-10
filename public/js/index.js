@@ -11,11 +11,11 @@ socketClient.on('connect', () => { //arrow function is not supported in IE
         text : 'Hey this is usha sabunkar'
     }); */
 
-    socketClient.emit('createMessage',{
+   /*  socketClient.emit('createMessage',{
         from:'Shailesh',
         text : 'Hey this is Shailesh sabunkar'
     })
-
+ */
 });//end of connect listener
 
 //this diconnect event will be fired, when the connection will be dropped/closed
