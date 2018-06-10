@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const socketIO = require('socket.io')
-const http = require('http');//built in node module
+const http = require('http'); //built in node module
 const _ = require('lodash')
 
 
@@ -15,14 +15,14 @@ const publicPath = path.join(__dirname + '/../public')
 
 
 
-var app = express();//It is use to configure the expressjs application
+var app = express(); //It is use to configure the expressjs application
 //note : we dont configure the expressjs by calling the express, rather we configure expressjs appln by
 //caling this variable -> app 
 var server = http.createServer(app);
 //when we call app.listen() method , this internally call this  http.createServer() method
-var socketServer = socketIO(server);//configure server to use 3party module -> socketIO
+var socketServer = socketIO(server); //configure server to use 3party module -> socketIO
 
-app.use(express.static(publicPath));//to setup the public folder which have all the frontend static pages
+app.use(express.static(publicPath)); //to setup the public folder which have all the frontend static pages
 
 
 //this method let's u register an event listener at server side, soo that @server side we can do some logic/implem
@@ -40,19 +40,19 @@ socketServer.on('connection', (socketClient) => {
     //since it is not listener , soo need to specifiy the callback as second argument
     //in second arugum we specifiy the data which we want to send, bydefault it can be empty if we dont want to
     //send the data
-    
+
     /* socketClient.emit('newEmail', {
         from : "tsabunkar@gmail.com",
         text :'Hey what is going on',
         createdAt : 123
     }) */
-    
+
     //This is the listener which listens to the createEmail -> custome event create
     /* socketClient.on('createEmail', (dataSendFromClient) =>{
         console.log('new email', dataSendFromClient);
     }); */
 
-    
+
     //chat application
     /*  var date = new Date();
     socketClient.emit('newMessage', {
@@ -61,15 +61,44 @@ socketServer.on('connection', (socketClient) => {
         createdAt : (date.getDate())+'/'+(date.getMonth()+1)+'/'+(date.getFullYear())
     }) */
 
-    socketClient.on('createMessage', (dataSendFromClient) =>{
-        console.log('new email', dataSendFromClient);
-        socketServer.emit('newMessage',{
-            from : dataSendFromClient.from,
-            text : dataSendFromClient.text,
-            createdAt : dataSendFromClient.createdAt
-        })
+    var date = new Date();
+    //It is to great/welcome all the clients ,who r joining our application 
+    socketClient.emit('newMessage', {
+        from: 'Admin',
+        text: 'welcome to chat app',
+        createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
     });
-    
+
+    //It is to say other clients who has already join the chat appln that, a new user has joined
+    socketClient.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'New user joined !!',
+        createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+    })
+
+    // var date = new Date();
+    socketClient.on('createMessage', (dataSendFromClient) => {
+        console.log('new email', dataSendFromClient);
+
+        //If the particular client broadcast an event, then this event is recieved to all the other
+        //clients, including the client who has send it
+
+        socketServer.emit('newMessage', {
+            from: dataSendFromClient.from,
+            text: dataSendFromClient.text,
+            createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+        });
+
+
+        //If the particular client broadcast an event, then this event shld be recieved to all the other
+        //clients but not to the same client who has fired this event
+        /*  socketClient.broadcast.emit('newMessage', {
+             from: dataSendFromClient.from,
+             text: dataSendFromClient.text,
+             createdAt: (date.getDate()) + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear())
+         }) */
+    });
+
 
     //on() -> this method is listener
     socketClient.on('disconnect', () => {
