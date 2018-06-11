@@ -32,7 +32,7 @@ socketServer.on('connection', (socketClient) => {
 
     //emit -> we use emit() inorder to emit/send the event @client and @server side emit() -> this is not a listener , its an emit since it is not listener , soo need to specifiy the callback as second argument in second arugum we specifiy the data which we want to send, bydefault it can be empty if we dont want to send the data
 
-    var date = new Date();
+
     //It is to great/welcome all the clients ,who r joining our application 
 
     socketClient.emit('newMessage',
@@ -45,7 +45,6 @@ socketServer.on('connection', (socketClient) => {
         generateMessage('Admin', 'New-user joined chat app')
     )
 
-    // var date = new Date();
     socketClient.on('createMessage', (dataSendFromClient, callback) => {
         console.log('new email', dataSendFromClient);
 
@@ -62,9 +61,10 @@ socketServer.on('connection', (socketClient) => {
     });
 
 
-
+ //createLocationMessage is an event emitter from client to server
     socketClient.on('createLocationMessage', (coordinatesVal) => {
         // socketServer.emit('newMessage', generateMessage('Admin', `lat :${coordinatesVal.latitude} & long:${coordinatesVal.longitude}`) )
+      //newLocationMessage is an event emitter from server to client
         socketServer.emit('newLocationMessage',
             generateLocationMessage('Admin', coordinatesVal.latitude, coordinatesVal.longitude));
     })
@@ -73,7 +73,8 @@ socketServer.on('connection', (socketClient) => {
     socketClient.on('disconnect', () => {
         console.log('client has beed disconnected !');
     })
-})
+    
+})//end of connection event listener
 
 
 server.listen(port, () => {

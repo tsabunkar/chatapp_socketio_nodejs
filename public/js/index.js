@@ -13,16 +13,20 @@ socketClient.on('disconnect', () => {
 
 
 socketClient.on('newMessage', (dataSendFromServer) => {
+
+    var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
     console.log('Got new Message', dataSendFromServer);
     var liElement = $('<li></li>');
-    liElement.text(`${dataSendFromServer.from}: ${dataSendFromServer.text}`);
+    liElement.text(`${dataSendFromServer.from} ${formattedTime} : ${dataSendFromServer.text}`);
     $("#messageOrderListId").append(liElement);
 })
 
 socketClient.on('newLocationMessage', (messageVal) => {
+    var formattedTime = moment(messageVal.createdAt).format('h:mm a');
+
     var liElem = $('<li></li>');
     var anchorEle = $('<a target="_blank">My current location</a>');
-    liElem.text(`${messageVal.from} : `);
+    liElem.text(`${messageVal.from} ${formattedTime} : `);
     anchorEle.attr('href', messageVal.geoLocUrl)
     liElem.append(anchorEle);
     $("#messageOrderListId").append(liElem);
