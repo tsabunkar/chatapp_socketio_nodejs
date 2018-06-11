@@ -19,6 +19,13 @@ socketClient.on('newMessage', (dataSendFromServer) => {
     var liElement = $('<li></li>');
     liElement.text(`${dataSendFromServer.from} ${formattedTime} : ${dataSendFromServer.text}`);
     $("#messageOrderListId").append(liElement);
+
+    //using mustache.js for rendering the template, instead of using Jquery
+
+    /* var myTemplate = $('#messageTemplateId').html();
+    var html = Mustache.render(myTemplate);// Mustache.render() -> render the template
+    $('#messageOrderListId').append(html) */
+
 })
 
 socketClient.on('newLocationMessage', (messageVal) => {
