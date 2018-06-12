@@ -14,29 +14,47 @@ socketClient.on('disconnect', () => {
 
 socketClient.on('newMessage', (dataSendFromServer) => {
 
-    var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
+   /*  var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
     console.log('Got new Message', dataSendFromServer);
     var liElement = $('<li></li>');
     liElement.text(`${dataSendFromServer.from} ${formattedTime} : ${dataSendFromServer.text}`);
-    $("#messageOrderListId").append(liElement);
+    $("#messageOrderListId").append(liElement); */
 
     //using mustache.js for rendering the template, instead of using Jquery
 
-    /* var myTemplate = $('#messageTemplateId').html();
-    var html = Mustache.render(myTemplate);// Mustache.render() -> render the template
-    $('#messageOrderListId').append(html) */
+    var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
+    var myTemplate = $('#messageTemplateId').html();
+    var htmlElem = Mustache.render(myTemplate, {
+        textValueRender : dataSendFromServer.text,
+        fromValueRender : dataSendFromServer.from,
+        createdAtValueRender : formattedTime
+    });// Mustache.render() -> render the template
+
+    $('#messageOrderListId').append(htmlElem);
 
 })
 
 socketClient.on('newLocationMessage', (messageVal) => {
-    var formattedTime = moment(messageVal.createdAt).format('h:mm a');
+   /*  var formattedTime = moment(messageVal.createdAt).format('h:mm a');
 
     var liElem = $('<li></li>');
     var anchorEle = $('<a target="_blank">My current location</a>');
     liElem.text(`${messageVal.from} ${formattedTime} : `);
     anchorEle.attr('href', messageVal.geoLocUrl)
     liElem.append(anchorEle);
-    $("#messageOrderListId").append(liElem);
+    $("#messageOrderListId").append(liElem); */
+
+    //using mustache.js for rendering the template, instead of using Jquery
+
+    var formattedTime = moment(messageVal.createdAt).format('h:mm a');
+    var myTemplate = $('#locationMessageTemplateId').html();
+    var htmlElem = Mustache.render(myTemplate, {
+        urlValueRendered :  messageVal.geoLocUrl,
+        fromValueRender : messageVal.from,
+        createdAtValueRender : formattedTime
+    });// Mustache.render() -> render the template
+
+    $('#messageOrderListId').append(htmlElem);
 })
 
 //-------------------JQuery code----------------------
