@@ -25,9 +25,9 @@ socketClient.on('newMessage', (dataSendFromServer) => {
     var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
     var myTemplate = $('#messageTemplateId').html();
     var htmlElem = Mustache.render(myTemplate, {
-        textValueRender : dataSendFromServer.text,
-        fromValueRender : dataSendFromServer.from,
-        createdAtValueRender : formattedTime
+        textValueInject : dataSendFromServer.text,
+        fromValueInject : dataSendFromServer.from,
+        createdAtValueInject : formattedTime
     });// Mustache.render() -> render the template
 
     $('#messageOrderListId').append(htmlElem);
@@ -49,9 +49,9 @@ socketClient.on('newLocationMessage', (messageVal) => {
     var formattedTime = moment(messageVal.createdAt).format('h:mm a');
     var myTemplate = $('#locationMessageTemplateId').html();
     var htmlElem = Mustache.render(myTemplate, {
-        urlValueRendered :  messageVal.geoLocUrl,
-        fromValueRender : messageVal.from,
-        createdAtValueRender : formattedTime
+        urlValueInject :  messageVal.geoLocUrl,
+        fromValueInject : messageVal.from,
+        createdAtValueInject : formattedTime
     });// Mustache.render() -> render the template
 
     $('#messageOrderListId').append(htmlElem);
