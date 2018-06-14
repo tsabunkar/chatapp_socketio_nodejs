@@ -1,81 +1,31 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Welcome page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Join | ChatApp</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
-<body class="chat">
-
-    <div class="chat__sidebar">
-        <h3>MyChatApp</h3>
-        <span style="color: rgb(255, 255, 255); text-align: right;">-Sabunkar Tejas Shailesh</span>
-        <div id="userDivId"></div>
-    </div>
-
-    <div class="chat__main">
-        <ol id="messageOrderListId" class="chat_messages"> </ol>
-
-        <div class="chat__footer" id="Myfooter">
-            <!-- when this form is submitted, we want to listen and call the socketClient.emit() -->
-            <form id="formId">
-                <!--  autofocus will bring the cursor to this input ele -->
-                <!--    autocomplete -> we dont want suggestion from the browser soo -> off -->
-                <input type="text" id="messageId" placeholder="Message" autofocus autocomplete="off" />
-                <button>Send</button>
-            </form>
-            <button id="sendLocationId"> Send Location </button>
-        </div>
-
-    </div>
-
-    <script id="messageTemplateId" type="text/template">
-        <!-- <p>This is the template</p> -->
-        <!-- <p>{{textValueRendered}}</p> -->
-     
-        <div style="background-color:#f2f5f9">
-        <li class="message" >
-            <div class="message__title">
-                <h4>{{fromValueInject}}</h4>
-               <span>{{createdAtValueInject}}</span>
-            </div>  
-            <div class="message__body">
-                <p>{{textValueInject}}</p>
+<body class="centered-form">
+    <div class="centered-form__form">
+        <form action="/chat.html">
+            <div class="form-field">
+                <h3>Join a Chat</h3>
             </div>
-        </li>
-    </div>
-    <br>
-    </script>
-
-    <script id="locationMessageTemplateId" type="text/template">
-         
-        <div style="background-color:#f2f5f9">
-        <li class="message" >
-            <div class="message__title">
-                <h4>{{fromValueInject}}</h4>
-               <span>{{createdAtValueInject}}</span>
-            </div>  
-            <div class="message__body">
-                <p>
-                    <a href="{{urlValueInject}}" target="_blank">My current location</a>
-                </p>
+            <div class="form-field">
+                <label>Display name</label>
+                <input type="text" name="presonId" autofocus/>
             </div>
-        </li>
+            <div class="form-field">
+                    <label>Room name</label>
+                    <input type="text" name="roomId" />
+            </div>
+            <div class="form-field">
+                <button>Join</button>
+            </div>
+        </form>
     </div>
-    <br>
-    </script>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/lib/jquery-3.3.1.min.js"></script>
-    <script src="/js/lib/moment.js"></script>
-    <script src="/js/lib/mustache.js"></script>
-
-    <!-- This will load the socket library which is avaliable at client side -->
-    <script src="./js/index.js">
-    </script>
-
-
+    
 </body>
-
-</html>
+</html> 
