@@ -12,6 +12,10 @@ const {
     isRealString
 } = require('./utils/validation')
 
+const { Users } = require('./utils/users')
+
+
+
 const port = process.env.PORT || 3000;
 
 // console.log(__dirname+'/../public');
@@ -26,6 +30,8 @@ var server = http.createServer(app);
 var socketServer = socketIO(server); //configure server to use 3party module -> socketIO
 
 app.use(express.static(publicPath)); //to setup the public folder which have all the frontend static pages
+
+var usersObj = new Users();//instaniating the new User Object
 
 
 //this method let's u register an event listener at server side, soo that @server side we can do some logic/implem when that event happens @client side this 'connection' ->(built-in event) lets us to listen to new connection, (ie when a new client is connected to our server this event will be triggered) and inside the callback fun we write our implemen logic when new client is connected
@@ -56,7 +62,12 @@ socketServer.on('connection', (socketClient) => {
         //similarly we have socketClient.leave(); //use to leave a specific room soo that user wont get messages from
         // that particular room
 
+        //1st) socketClient.join -> User join the room
+        usersObj.removeUser(socketClient.id);//2nd) We remove that user from other rooms
+        usersObj.addUser(socketClient.id, urlParms.personId, urlParms.roomId)//3rd) we add that user to that particular room (for which he has choosed the roomId)
 
+        //emitting an event
+        socketServer.to(urlParms.roomId).emit('updateUsersList', usersObj.getUserList(urlParms.roomId) );
 
         //It is to great/welcome all the clients ,who r joining our application 
         socketClient.emit('newMessage',
@@ -68,7 +79,8 @@ socketServer.on('connection', (socketClient) => {
 
         //It is to say other clients who has already join the chat appln that, a new user has joined
         // socketClient.broadcast.emit('newMessage', //instead of broadcasting to every user who has joind the chat appln
-        socketClient.broadcast.to(urlParms.roomId).emit('newMessage', //we will bordcast only to specific user, who belongs that particular room
+        //broadcating -> to(urlParms.roomId), we will bordcast only to specific user, who belongs that particular roomId
+        socketClient.broadcast.to(urlParms.roomId).emit('newMessage',
             generateMessage('Admin', `${urlParms.personId} has joined`)//showing the name who has joined to the prvoius members already present in that chat-room
         );
 
@@ -103,6 +115,15 @@ socketServer.on('connection', (socketClient) => {
     //on() -> this method is listener
     socketClient.on('disconnect', () => {
         console.log('client has beed disconnected !');
+        //If the user is removed from the room then
+        var userObject = usersObj.removeUser(socketClient.id);
+        
+        if(userObject){//if userObj was removed 
+            socketServer.to(userObject.roomName).emit('updateUsersList', usersObj.getUserList(userObject.roomName) );//update the Users list
+            socketServer.to(userObject.roomName).emit('newMessage', generateMessage('Admin', `${userObject.personName} has left`));//also display in the 
+            //chat application as user has left
+ 
+        }
     })
 
 }) //end of connection event listener
