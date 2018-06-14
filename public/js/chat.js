@@ -4,6 +4,23 @@ var socketClient = io(); //we are making the request from client to server -> to
 socketClient.on('connect', () => { //arrow function is not supported in IE
     console.log('connected to server');
 
+    //when event is connected , we are differentiating different user based on room joined
+    var urlParms = window.location.search
+    var urlParmsConvertedToObject = $.deparam(urlParms);
+
+    //creating the join event
+    socketClient.emit('join', urlParmsConvertedToObject, (err) => {
+        //acknowledgemnet
+        if (err) {
+            //if error has occured -> means invalid string eneterd in personId and roomId
+            //then redirected to home page i.e-index.html for that using -> window.location.href
+            alert(err);
+            window.location.href = "/";
+        } else {
+            console.log('No error');
+        }
+    })
+
 }); //end of connect listener
 
 //this diconnect event will be fired, when the connection will be dropped/closed
@@ -14,45 +31,45 @@ socketClient.on('disconnect', () => {
 
 socketClient.on('newMessage', (dataSendFromServer) => {
 
-   /*  var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
-    console.log('Got new Message', dataSendFromServer);
-    var liElement = $('<li></li>');
-    liElement.text(`${dataSendFromServer.from} ${formattedTime} : ${dataSendFromServer.text}`);
-    $("#messageOrderListId").append(liElement); */
+    /*  var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
+     console.log('Got new Message', dataSendFromServer);
+     var liElement = $('<li></li>');
+     liElement.text(`${dataSendFromServer.from} ${formattedTime} : ${dataSendFromServer.text}`);
+     $("#messageOrderListId").append(liElement); */
 
     //using mustache.js for rendering the template, instead of using Jquery
 
     var formattedTime = moment(dataSendFromServer.createdAt).format('h:mm a');
     var myTemplate = $('#messageTemplateId').html();
     var htmlElem = Mustache.render(myTemplate, {
-        textValueInject : dataSendFromServer.text,
-        fromValueInject : dataSendFromServer.from,
-        createdAtValueInject : formattedTime
-    });// Mustache.render() -> render the template
+        textValueInject: dataSendFromServer.text,
+        fromValueInject: dataSendFromServer.from,
+        createdAtValueInject: formattedTime
+    }); // Mustache.render() -> render the template
 
     $('#messageOrderListId').append(htmlElem);
 
 })
 
 socketClient.on('newLocationMessage', (messageVal) => {
-   /*  var formattedTime = moment(messageVal.createdAt).format('h:mm a');
+    /*  var formattedTime = moment(messageVal.createdAt).format('h:mm a');
 
-    var liElem = $('<li></li>');
-    var anchorEle = $('<a target="_blank">My current location</a>');
-    liElem.text(`${messageVal.from} ${formattedTime} : `);
-    anchorEle.attr('href', messageVal.geoLocUrl)
-    liElem.append(anchorEle);
-    $("#messageOrderListId").append(liElem); */
+     var liElem = $('<li></li>');
+     var anchorEle = $('<a target="_blank">My current location</a>');
+     liElem.text(`${messageVal.from} ${formattedTime} : `);
+     anchorEle.attr('href', messageVal.geoLocUrl)
+     liElem.append(anchorEle);
+     $("#messageOrderListId").append(liElem); */
 
     //using mustache.js for rendering the template, instead of using Jquery
 
     var formattedTime = moment(messageVal.createdAt).format('h:mm a');
     var myTemplate = $('#locationMessageTemplateId').html();
     var htmlElem = Mustache.render(myTemplate, {
-        urlValueInject :  messageVal.geoLocUrl,
-        fromValueInject : messageVal.from,
-        createdAtValueInject : formattedTime
-    });// Mustache.render() -> render the template
+        urlValueInject: messageVal.geoLocUrl,
+        fromValueInject: messageVal.from,
+        createdAtValueInject: formattedTime
+    }); // Mustache.render() -> render the template
 
     $('#messageOrderListId').append(htmlElem);
 })
@@ -70,7 +87,7 @@ $('#formId').on('submit', (e) => { //onsubmit of form this function will be invo
     }, () => { //3rd argum of emit(), which is for acknowledgement
 
         $('#messageId').val('') //clearing the text value to empty when message is send
-       
+
     })
 })
 

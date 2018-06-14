@@ -8,6 +8,9 @@ const {
     generateMessage,
     generateLocationMessage
 } = require('./utils/message')
+const {
+    isRealString
+} = require('./utils/validation')
 
 const port = process.env.PORT || 3000;
 
@@ -33,17 +36,45 @@ socketServer.on('connection', (socketClient) => {
     //emit -> we use emit() inorder to emit/send the event @client and @server side emit() -> this is not a listener , its an emit since it is not listener , soo need to specifiy the callback as second argument in second arugum we specifiy the data which we want to send, bydefault it can be empty if we dont want to send the data
 
 
-    //It is to great/welcome all the clients ,who r joining our application 
 
-    socketClient.emit('newMessage',
-        /*   message.generateMessage('Admin', 'welcome to chat app') */
-        generateMessage('Admin', 'welcome to chat app')
-    );
+    //listener for join event
+    socketClient.on('join', (urlParms, callback) => {
+        //checking if the entered personId and roomId input txt box value is in proper
+        //string format using this if statement
+        console.log(urlParms);
+        console.log(urlParms.personId, urlParms.roomId);
+        if (!isRealString(urlParms.personId) || !isRealString(urlParms.roomId)) {
+            callback('Name and room-name required'); //sending the error message
+            return
+        }
 
-    //It is to say other clients who has already join the chat appln that, a new user has joined
-    socketClient.broadcast.emit('newMessage',
-        generateMessage('Admin', 'New-user joined chat app')
-    )
+
+        //if valid personId and roomId then doesnt send any error message
+
+        socketClient.join(urlParms.roomId) //this will the join a particular user to the particular roomId/roomName
+        //join() -> this is inbuilt method provided by socket.io
+        //similarly we have socketClient.leave(); //use to leave a specific room soo that user wont get messages from
+        // that particular room
+
+
+
+        //It is to great/welcome all the clients ,who r joining our application 
+        socketClient.emit('newMessage',
+            /*   message.generateMessage('Admin', 'welcome to chat app') */
+            generateMessage('Admin', 'welcome to chat app')
+        );
+
+
+
+        //It is to say other clients who has already join the chat appln that, a new user has joined
+        // socketClient.broadcast.emit('newMessage', //instead of broadcasting to every user who has joind the chat appln
+        socketClient.broadcast.to(urlParms.roomId).emit('newMessage', //we will bordcast only to specific user, who belongs that particular room
+            generateMessage('Admin', `${urlParms.personId} has joined`)//showing the name who has joined to the prvoius members already present in that chat-room
+        );
+
+        callback();
+    })//end of join listener
+
 
     socketClient.on('createMessage', (dataSendFromClient, callback) => {
         console.log('new email', dataSendFromClient);
@@ -61,10 +92,10 @@ socketServer.on('connection', (socketClient) => {
     });
 
 
- //createLocationMessage is an event emitter from client to server
+    //createLocationMessage is an event emitter from client to server
     socketClient.on('createLocationMessage', (coordinatesVal) => {
         // socketServer.emit('newMessage', generateMessage('Admin', `lat :${coordinatesVal.latitude} & long:${coordinatesVal.longitude}`) )
-      //newLocationMessage is an event emitter from server to client
+        //newLocationMessage is an event emitter from server to client
         socketServer.emit('newLocationMessage',
             generateLocationMessage('Admin', coordinatesVal.latitude, coordinatesVal.longitude));
     })
@@ -73,8 +104,8 @@ socketServer.on('connection', (socketClient) => {
     socketClient.on('disconnect', () => {
         console.log('client has beed disconnected !');
     })
-    
-})//end of connection event listener
+
+}) //end of connection event listener
 
 
 server.listen(port, () => {
