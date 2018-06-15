@@ -11,7 +11,7 @@
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}/server/server.js",
             "restart": true,
-            "console": "integratedTerminal",
+            "console": "internalConsole",
             "internalConsoleOptions": "neverOpen"
         },
         {

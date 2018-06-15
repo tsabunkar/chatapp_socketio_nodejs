@@ -116,11 +116,11 @@ socketServer.on('connection', (socketClient) => {
     socketClient.on('disconnect', () => {
         console.log('client has beed disconnected !');
         //If the user is removed from the room then
-        var userObject = usersObj.removeUser(socketClient.id);
-        
-        if(userObject){//if userObj was removed 
-            socketServer.to(userObject.roomName).emit('updateUsersList', usersObj.getUserList(userObject.roomName) );//update the Users list
-            socketServer.to(userObject.roomName).emit('newMessage', generateMessage('Admin', `${userObject.personName} has left`));//also display in the 
+        var userObjectRemoved = usersObj.removeUser(socketClient.id);
+        // console.log('-------', userObjectRemoved);
+        if(userObjectRemoved){//if userObj was removed 
+            socketServer.to(userObjectRemoved.roomName).emit('updateUsersList', usersObj.getUserList(userObjectRemoved.roomName) );//update the Users list
+            socketServer.to(userObjectRemoved.roomName).emit('newMessage', generateMessage('Admin', `${userObjectRemoved.personName} has left`));//also display in the 
             //chat application as user has left
  
         }

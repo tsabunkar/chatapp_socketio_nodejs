@@ -6,12 +6,12 @@ socketClient.on('connect', () => { //arrow function is not supported in IE
 
     //when event is connected , we are differentiating different user based on room joined
     var urlParms = window.location.search; //fetching the url param in the form string 
-    var urlParmsConvertedToObject = $.deparam(urlParms);//will decode the url string format to required JS Object
+    var urlParmsConvertedToObject = $.deparam(urlParms); //will decode the url string format to required JS Object
 
     //creating the join event
     socketClient.emit('join', urlParmsConvertedToObject, (err) => {
         //acknowledgemnet
-        if (err) {//This if statment is executed only if the callback function throws a string method
+        if (err) { //This if statment is executed only if the callback function throws a string method
             //if error has occured -> means invalid string eneterd in personId and roomId
             //then redirected to home page i.e-index.html for that using -> window.location.href
             alert(err);
@@ -28,8 +28,16 @@ socketClient.on('disconnect', () => {
     console.log('disconnected from server');
 });
 
+//updateUsersList event listener
 socketClient.on('updateUsersList', (usersList) => {
-    console.log('users list', usersList);
+    // console.log('users list', usersList);
+
+    var olElem = $('<ol></ol>');
+    usersList.forEach((userObj) => {
+        olElem.append($('<li></li>').text(userObj))
+    });
+
+    $('#usersList').html(olElem);
 })
 
 
