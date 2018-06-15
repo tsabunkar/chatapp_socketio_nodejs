@@ -94,7 +94,7 @@ $('#formId').on('submit', (e) => { //onsubmit of form this function will be invo
     e.preventDefault();
 
     socketClient.emit('createMessage', {
-        from: 'User',
+        // from: 'User',
         text: $('#messageId').val()
     }, () => { //3rd argum of emit(), which is for acknowledgement
 
